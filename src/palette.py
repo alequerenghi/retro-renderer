@@ -6,7 +6,31 @@ class PaletteLoadError(Exception):
     pass
 
 class Palette:
+    """
+    Class used to parse and represent a palette.
+
+    A Palette represents a list of RGB values as a Numpy array of size
+    MAX_PALETTE_IDX. RGB values are represented with arrays of three elements
+    of type uint8.
+
+    Attributes
+    ----------
+    palette : numpy.ndarray
+        the stored palette
+
+    Methods
+    -------
+    from_json(filename: str)
+        reads a json file containing a palette and returns a Palette object
+    """
+
     def __init__(self, palette):
+        """
+        Parameters
+        ----------
+        palette : array_like
+            the palette
+        """
         self.palette = np.asarray(palette, dtype=np.uint8)
         if (MAX_PALETTE_IDX, 3) != palette.shape:
             raise ValueError(f"Palette shape must be ({MAX_PALETTE_IDX}, 3), "
@@ -14,6 +38,20 @@ class Palette:
 
     @classmethod
     def from_json(cls, filename):
+        """
+        Instantiates a Palette from a JSON file
+
+        Parameters
+        ----------
+        filename : str
+            The JSON file to parse
+
+        Raises
+        ------
+        PaletteLoadError
+            If either the file is not found, it has wrong JSON formatting or
+            contains invalid data
+        """
         try:
             with open(filename) as f:
                 data = json.load(f)
@@ -29,4 +67,7 @@ class Palette:
                                    f" data: {e}")
 
     def __getitem__(self, i):
+        """
+        returns a single RGB value
+        """
         return self.palette[i]
