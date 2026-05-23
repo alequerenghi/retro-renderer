@@ -1,7 +1,17 @@
-from src.config import SHEET_SIZE, SPRITE_SIZE, TILE_SIZE
+from src.config import *
 from src.palette import Palette
 import numpy as np
 from PIL import Image
+from numpy.typing import ArrayLike, NDArray
+
+"""
+file:   virtualvram.py
+author: ALESSANDRO QUERENGHI
+id:     IN2300001
+
+This file contains the classes that read and unpack binary data of sprites and
+tiles
+"""
 
 class SheetDataLoadError(Exception):
     pass
@@ -29,12 +39,12 @@ class SheetData:
         Writes data to the file indicated using the palette passed
     """
 
-    def __init__(self, data, size):
+    def __init__(self, data: ArrayLike, size: int):
         self.size = size
         self.data = np.asarray(data, dtype=np.uint8)
 
     @classmethod
-    def fromfile(cls, filename):
+    def fromfile(cls, filename: str) -> Self:
         """
         Loads and unpacks an asset file containing binary data.
 
@@ -73,7 +83,7 @@ class SheetData:
             raise SheetDataLoadError(f"The asset file '{filename}' has invalid"
                                    f" data: {e}")
 
-    def __getitem__(self, k: int):
+    def __getitem__(self, k: int) -> NDArray[np.uint8]:
         """
         Returns a view of an asset object
         """
@@ -135,7 +145,7 @@ class VirtualVRAM:
         self.sprites    = sprites
 
     @classmethod
-    def fromfiles(cls, tiles: str, sprites: str):
+    def fromfiles(cls, tiles: str, sprites: str) -> Self:
         """
         Loads tiles and sprites from files
 
@@ -176,4 +186,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

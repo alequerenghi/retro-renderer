@@ -1,3 +1,10 @@
+"""
+file:   config.py
+author: ALESSANDRO QUERENGHI
+id:     IN2300001
+
+This files contains constants required by other files
+"""
 # Video & Display Settings
 SCREEN_WIDTH        = 640
 SCREEN_HEIGHT       = 480
