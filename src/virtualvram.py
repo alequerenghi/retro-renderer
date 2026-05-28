@@ -95,12 +95,8 @@ class SheetData:
         Loads an asset from a PNG file and applies the given palette
         to it
         """
-        img = Image.open(filename)
+        img = Image.open(filename).convert("RGB")
         flat_palette = palette.palette.flatten().tolist()
-        # add padding if the length is not 265
-        padding =768 - len(flat_palette)
-        if padding > 0:
-            flat_palette.extend([0] * padding)
         # create new image from the palette
         template = Image.new("P", (1,1))
         template.putpalette(flat_palette)
