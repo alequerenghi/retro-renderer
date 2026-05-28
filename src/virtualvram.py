@@ -37,6 +37,12 @@ class SheetData:
         Loads and unpacks an asset file containing binary data 
     to_png(palette : Palette, filename : str)
         Writes data to the file indicated using the palette passed
+    from_png(filename : str, palette : Palette)
+        Loads an asset object from PNG image and quantizes the palette to the
+        vlaue passed
+    to_bin(filename : str)
+        Packs the numpy.uint8' array representing an asset object into a 4bit
+        arraay of nibblles and saves it to the filename passed
     """
 
     def __init__(self, data: ArrayLike, size: int):
@@ -83,6 +89,26 @@ class SheetData:
             raise SheetDataLoadError(f"The asset file '{filename}' has invalid"
                                    f" data: {e}")
 
+    @classmethod
+    def from_png(cls, filename: str, palette: Palette) -> Self:
+        """
+        Loads an asset from a PNG file and applies the given palette
+        to it
+        """
+        img = Image.open(filename)
+        flat_palette = palette.palette.flatten().tolist()
+        # add padding if the length is not 265
+        padding =768 - len(flat_palette)
+        if padding > 0:
+            flat_palette.extend([0] * padding)
+        # create new image from the palette
+        template = Image.new("P", (1,1))
+        template.putpalette(flat_palette)
+        # now quantize the png to the obtained
+        quantized = img.quantize(palette=template,
+                                 dither=Image.Dither.NONE)
+        return cls(quantized, cls.size)
+
     def __getitem__(self, k: int) -> NDArray[np.uint8]:
         """
         Returns a view of an asset object
@@ -100,6 +126,16 @@ class SheetData:
         rgb_buffer = palette[self.data]
         img = Image.fromarray(rgb_buffer)
         img.save(filename)
+        return None
+
+    def to_bin(self, filename: str):
+        """
+        Packs data into nibbles and saves to file
+        """
+        data    = self.data.flatten()
+        outdata = np.empty(data.shape[0] // 2, dtype=np.uint8)
+        outdata = data[0::2] << 4 & 0xf0 | data[1::2] & 0x0f
+        outdata.tofile(filename)
         return None
 
 class Sprites(SheetData):

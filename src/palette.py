@@ -44,9 +44,9 @@ class Palette:
             the palette
         """
         self.palette = np.asarray(palette, dtype=np.uint8)
-        if (MAX_PALETTE_IDX, 3) != palette.shape:
-            raise ValueError(f"Palette shape must be ({MAX_PALETTE_IDX}, 3), "
-                             f"current palette: {palette.shape}")
+        if 3 != palette.shape[1]:
+            raise ValueError(f"The palette is a triple of RGB values in the"
+                             f" range [0, 255]")
 
     @classmethod
     def from_json(cls, filename: str) -> Self:
@@ -94,7 +94,8 @@ class Palette:
         conca = np.empty((0, 3))
         for filename in arg:
             im = Image.open(filename)
-            data = np.array(im, dtype=np.uint8).reshape(-1, 3)
+            pal = im.quantize(16).getpalette()
+            data = np.array(pal, dtype=np.uint8).reshape(-1, 3)
             conca = np.concat((conca, data), axis=0)
         data = np.unique(conca, axis=0)
         return cls(data)
