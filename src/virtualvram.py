@@ -208,13 +208,3 @@ class VirtualVRAM:
         """
         self.tiles.to_png(palette, tiles)
         self.sprites.to_png(palette, sprites)
-        
-
-def main():
-    p = Palette.from_json('example/palette.json')
-    v = VirtualVRAM.fromfiles('example/tiles.bin', 'example/sprites.bin')
-    v.to_png(p, 'tiles-dup.png', 'sprites-dup.png')
-    return None
-
-if __name__ == "__main__":
-    main()

@@ -113,11 +113,3 @@ class Palette:
         return str(self.palette)
 
 
-def main():
-    p = Palette.from_png("sprites-dup.png", "tiles-dup.png")
-    print(p)
-    return None
-
-if __name__ == "__main__":
-    main()
-
