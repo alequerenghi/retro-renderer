@@ -94,7 +94,7 @@ class Blitter:
             fb_row_start   = max(0, row)
             fb_row_stop    = min(SCREEN_HEIGHT, fb_row_start + SPRITE_SIZE)
             fb_col_start   = max(0, col)
-            fb_col_stop    = min(SCREEN_HEIGHT, fb_col_start + SPRITE_SIZE)
+            fb_col_stop    = min(SCREEN_WIDTH, fb_col_start + SPRITE_SIZE)
             # if completely offscren don't apply it
             if fb_row_start >= fb_row_stop or fb_col_start >= fb_col_stop:
                 continue
